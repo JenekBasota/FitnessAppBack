@@ -1,15 +1,18 @@
-from flask import Flask, request, session
+from flask import Flask, request, session, jsonify
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from dotenv import load_dotenv
 from services.dbConnectionEngine import dbConnectionEngine
 from services.usersService import UsersService
 from sqlalchemy.orm import sessionmaker
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
+import datetime
 import os
 
 app = Flask(__name__)
 SECRET_KEY = os.urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
+app.config["JWT_SECRET_KEY"] = SECRET_KEY
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -21,12 +24,12 @@ def login():
     try:
         if user and hasher.verify(user.password, password):
             # логика сессий
-            session.permanent = True
-            return {"Operation": "Successful"}
+            access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(hours=2))
+            return jsonify({'message': 'Login Success', 'access_token': access_token})
     except VerifyMismatchError:
-        return {"Operation": "Not successful"}
+        return jsonify({"Operation": "Not successful"})
     
-    return {"Operation": "Not successful"}
+    return jsonify({"Operation": "Not successful"})
     
     
 @app.route("/register", methods=["POST"])
@@ -41,11 +44,12 @@ def register():
         user_table.InsertUser(username, user_table.EncryptedPassword(password))
         # возвращаем сессию
 
-    return {"Operation": "login is already registered"}
+    return jsonify({"Operation": "login is already registered"})
 
 
 if __name__ == "__main__":
     load_dotenv()
+    jwt = JWTManager(app)
     db_connectionEngine = dbConnectionEngine()
     engine = db_connectionEngine.get_engine()
     session_bd = sessionmaker(bind=engine.connect())()
