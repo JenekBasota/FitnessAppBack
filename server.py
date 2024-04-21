@@ -1,8 +1,7 @@
-from flask import Flask, request, session, jsonify
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required
+from flask import Flask, request, jsonify
+from flask_jwt_extended import JWTManager, create_access_token
 from dotenv import load_dotenv
-from services.dbConnectionEngine import dbConnectionEngine
-from services.usersService import UsersService
+import services
 from sqlalchemy.orm import sessionmaker
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
@@ -50,9 +49,9 @@ def register():
 if __name__ == "__main__":
     load_dotenv()
     jwt = JWTManager(app)
-    db_connectionEngine = dbConnectionEngine()
+    db_connectionEngine = services.dbConnectionEngine()
     engine = db_connectionEngine.get_engine()
     session_bd = sessionmaker(bind=engine.connect())()
     hasher = PasswordHasher()
-    user_table = UsersService(engine, session_bd, hasher)
+    user_table = services.UsersService(engine, session_bd, hasher)
     app.run(debug=True, host="127.0.0.1", port=1488)
