@@ -6,5 +6,5 @@ class Users(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")
-    username = Column(String(50), unique=True)
+    username = Column(String(16), unique=True)
     password = Column(String(128))
