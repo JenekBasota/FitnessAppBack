@@ -50,6 +50,7 @@ def register():
     if not user_table.InsertUser(username, user_table.EncryptedPassword(password)):
         return jsonify({"msg": "Insert user error"}), 400
     
+    user = user_table.FindUser(username)
     access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(hours=2))
     return jsonify({'msg': 'User created', 'access_token': access_token}), 200
 
