@@ -63,4 +63,4 @@ if __name__ == "__main__":
     session_bd = sessionmaker(bind=engine.connect())()
     hasher = PasswordHasher()
     user_table = services.UsersService(engine, session_bd, hasher)
-    app.run(debug=True, host="127.0.0.1", port=1488)
+    app.run(debug=True, host="0.0.0.0", port=1488)
