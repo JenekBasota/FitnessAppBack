@@ -1,12 +1,12 @@
-from sqlalchemy import and_
-from tables.users import Users
+from sqlalchemy import and_, Numeric
+from tables import *
 from sqlalchemy.orm import Session
 from argon2 import PasswordHasher
+from decimal import Decimal
 import os
 
 class UsersService():
-    def __init__(self, engine, session: Session, hasher: PasswordHasher):
-        self.engine = engine
+    def __init__(self, session: Session, hasher: PasswordHasher):
         self.session = session
         self.hasher = hasher
 
@@ -20,13 +20,17 @@ class UsersService():
         except:
             return False
     
-    def InsertUser(self, username, password) -> bool:
-        new_user = Users(username=username, password=password)
+    def InsertUser(self, username, email, weight, height, gender, password) -> bool:
         try:
+            new_user = Users(username=username, email=email, password=password)
             self.session.add(new_user)
             self.session.commit()
+            new_user_data = Users_data(user_id=new_user.id, weight=Decimal(f'{weight:.2f}'), height=height, gender=gender)
+            self.session.add(new_user_data)
+            self.session.commit()
             return True
-        except:
+        except Exception as err:
+            print(f"Failed: {err}")
             self.session.rollback()
             return False
         
