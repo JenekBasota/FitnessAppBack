@@ -1,4 +1,4 @@
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 from tables import *
 from sqlalchemy.orm import Session
 from argon2 import PasswordHasher
@@ -19,6 +19,15 @@ class UsersService():
                 )
         except:
             return False
+        
+    def CheckUniqueEmailOrLogin(self, username, email):
+        try:
+            return (
+                self.session.query(Users).filter(or_(Users.username == username, Users.email == email)).first()
+            )
+        except:
+            return False
+
     
     def InsertUser(self, username, email, weight, height, gender, password) -> bool:
         try:
@@ -30,6 +39,7 @@ class UsersService():
             self.session.commit()
             return True
         except Exception as err:
+            print(f"Failed {err}")
             self.session.rollback()
             return False
         

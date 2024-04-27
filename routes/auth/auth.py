@@ -57,7 +57,7 @@ def register():
     if not username or not password or not email or not weight or not height or not gender:
         return jsonify({"msg": "Missing data"}), 400
 
-    user = auth_Blueprint.user_table.FindUser(username)
+    user = auth_Blueprint.user_table.CheckUniqueEmailOrLogin(username=username, email=email)
     if user == False:
         return jsonify({"msg": "Database Error"}), 400
     if user is not None:
@@ -71,6 +71,5 @@ def register():
         auth_Blueprint.user_table.EncryptedPassword(password)):
         return jsonify({"msg": "Database Error"}), 400
     
-    user = auth_Blueprint.user_table.FindUser(username)
-    access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(hours=2))
+    access_token = create_access_token(identity=username, expires_delta=datetime.timedelta(hours=2))
     return jsonify({'msg': 'User created', 'access_token': access_token}), 200
