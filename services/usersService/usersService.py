@@ -1,4 +1,4 @@
-from sqlalchemy import and_, Numeric
+from sqlalchemy import or_
 from tables import *
 from sqlalchemy.orm import Session
 from argon2 import PasswordHasher
@@ -10,13 +10,13 @@ class UsersService():
         self.session = session
         self.hasher = hasher
 
-    def FindUser(self, username):
+    def FindUser(self, username_or_email):
         try:
             return (
-                self.session.query(Users)
-                .filter(Users.username == username)
-                .first()
-            )
+                    self.session.query(Users)
+                    .filter(or_(Users.username == username_or_email, Users.email == username_or_email))
+                    .first()
+                )
         except:
             return False
     
@@ -30,7 +30,6 @@ class UsersService():
             self.session.commit()
             return True
         except Exception as err:
-            print(f"Failed: {err}")
             self.session.rollback()
             return False
         

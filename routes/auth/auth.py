@@ -26,10 +26,11 @@ def login():
 
     username = request.json.get("username")
     password = request.json.get("password")
-    if not username or not password:
-        return jsonify({"msg": "Missing username or password"}), 400
+    if not password or not username:
+        return jsonify({"msg": "Missing data"}), 400
     
     user = auth_Blueprint.user_table.FindUser(username)
+        
     if user == False:
         return jsonify({"msg": "Database Error"}), 400
     try:    
@@ -60,7 +61,7 @@ def register():
     if user == False:
         return jsonify({"msg": "Database Error"}), 400
     if user is not None:
-        return jsonify({"msg": "Login is already registered"}), 401
+        return jsonify({"msg": "This user already exists"}), 401
     if not auth_Blueprint.user_table.InsertUser(
         username, 
         email,
