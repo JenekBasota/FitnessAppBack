@@ -37,9 +37,8 @@ class UsersService():
             new_user_data = Users_data(user_id=new_user.id, weight=Decimal(f'{weight:.2f}'), height=height, gender=gender)
             self.session.add(new_user_data)
             self.session.commit()
-            return True
-        except Exception as err:
-            print(f"Failed {err}")
+            return new_user.id
+        except:
             self.session.rollback()
             return False
         

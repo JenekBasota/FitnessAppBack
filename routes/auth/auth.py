@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, jsonify
 from flask_jwt_extended import JWTManager, create_access_token
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
@@ -11,13 +11,9 @@ auth_Blueprint = Blueprint('auth_Blueprint', __name__)
 def init_auth_blueprint(state):
     app = state.app
 
-    jwt = JWTManager(app)
-    hasher = PasswordHasher()
-    user_table = UsersService(app.session_bd, hasher)
-
-    auth_Blueprint.jwt = jwt
-    auth_Blueprint.hasher = hasher
-    auth_Blueprint.user_table = user_table
+    auth_Blueprint.jwt = JWTManager(app)
+    auth_Blueprint.hasher = PasswordHasher()
+    auth_Blueprint.user_table = UsersService(app.session_bd, auth_Blueprint.hasher)
 
 @auth_Blueprint.route("/login", methods=["POST"])
 def login():
@@ -62,14 +58,13 @@ def register():
         return jsonify({"msg": "Database Error"}), 400
     if user is not None:
         return jsonify({"msg": "This user already exists"}), 401
-    if not auth_Blueprint.user_table.InsertUser(
-        username, 
-        email,
-        weight,
-        height,
-        gender,
-        auth_Blueprint.user_table.EncryptedPassword(password)):
+    
+    user_id = auth_Blueprint.user_table.InsertUser(
+        username, email, weight,
+        height, gender,
+        auth_Blueprint.user_table.EncryptedPassword(password))
+    if not user_id:
         return jsonify({"msg": "Database Error"}), 400
     
-    access_token = create_access_token(identity=username, expires_delta=datetime.timedelta(hours=2))
+    access_token = create_access_token(identity=user_id, expires_delta=datetime.timedelta(hours=2))
     return jsonify({'msg': 'User created', 'access_token': access_token}), 200
