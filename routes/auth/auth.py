@@ -25,6 +25,9 @@ def login():
     if not password or not username:
         return jsonify({"msg": "Missing data", "status": 400})
     
+    if type(username) != str or type(password) != str:
+        return jsonify({"msg": "Incorrect data type detected", "status": 400})
+    
     user = auth_Blueprint.user_table.FindUser(username)
         
     if user == False:
@@ -50,6 +53,9 @@ def register():
 
     if not username or not password or not email or not weight or not height or not gender:
         return jsonify({"msg": "Missing data", "status": 400})
+    
+    if type(username) != str or type(email) != str or type(gender) != str or type(password) != str or type(height) != int or type(weight) != float:
+        return jsonify({"msg": "Incorrect data type detected", "status": 400})
 
     user = auth_Blueprint.user_table.CheckUniqueEmailOrLogin(username=username, email=email)
     if user == False:
