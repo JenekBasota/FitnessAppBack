@@ -18,30 +18,28 @@ def init_auth_blueprint(state):
 @auth_Blueprint.route("/login", methods=["POST"])
 def login():
     if not request.is_json:
-        return jsonify({"msg": "Missing JSON in request"}), 400
+        return jsonify({"msg": "Missing JSON in request", "status": 400})
 
     username = request.json.get("username")
     password = request.json.get("password")
     if not password or not username:
-        return jsonify({"msg": "Missing data"}), 400
+        return jsonify({"msg": "Missing data", "status": 400})
     
     user = auth_Blueprint.user_table.FindUser(username)
         
     if user == False:
-        return jsonify({"msg": "Database Error"}), 400
+        return jsonify({"msg": "Database Error", "status": 400})
     try:    
         if user and auth_Blueprint.hasher.verify(user.password, password):
-            access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(hours=2))
-            return jsonify({'msg': 'Login success', 'access_token': access_token}), 200
+            access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(minutes=5))
+            return jsonify({'msg': 'Login success', 'access_token': access_token, "status": 200})
     except VerifyMismatchError:
-        return jsonify({"msg": "Bad Credentials"}), 401
-    
-    return jsonify({"msg": "Bad Credentials"})
+        return jsonify({"msg": "Bad Credentials", "status": 401})
 
 @auth_Blueprint.route("/register", methods=["POST"])
 def register():
     if not request.is_json:
-        return jsonify({"msg": "Missing JSON in request"}), 400
+        return jsonify({"msg": "Missing JSON in request", "status": 400})
 
     username = request.json.get("username")
     email = request.json.get("email")
@@ -51,20 +49,20 @@ def register():
     password = request.json.get("password")
 
     if not username or not password or not email or not weight or not height or not gender:
-        return jsonify({"msg": "Missing data"}), 400
+        return jsonify({"msg": "Missing data", "status": 400})
 
     user = auth_Blueprint.user_table.CheckUniqueEmailOrLogin(username=username, email=email)
     if user == False:
-        return jsonify({"msg": "Database Error"}), 400
+        return jsonify({"msg": "Database Error", "status": 400})
     if user is not None:
-        return jsonify({"msg": "This user already exists"}), 401
+        return jsonify({"msg": "This user already exists", "status": 401})
     
     user_id = auth_Blueprint.user_table.InsertUser(
         username, email, weight,
         height, gender,
         auth_Blueprint.user_table.EncryptedPassword(password))
     if not user_id:
-        return jsonify({"msg": "Database Error"}), 400
+        return jsonify({"msg": "Database Error", "status": 400})
     
     access_token = create_access_token(identity=user_id, expires_delta=datetime.timedelta(hours=2))
-    return jsonify({'msg': 'User created', 'access_token': access_token}), 200
+    return jsonify({'msg': 'User created', 'access_token': access_token, "status": 200})

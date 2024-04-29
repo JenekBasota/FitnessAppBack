@@ -6,9 +6,20 @@ from decimal import Decimal
 import os
 
 class UsersService():
-    def __init__(self, session: Session, hasher: PasswordHasher):
+    def __init__(self, session: Session, hasher: PasswordHasher = None):
         self.session = session
         self.hasher = hasher
+
+    def FindUserById(self, user_id):
+        try:
+            return (
+                self.session.query(Users, Users_data)
+                .join(Users_data, Users.id == Users_data.user_id)
+                .filter(Users.id == user_id)
+                .first()
+            )
+        except:
+            return False
 
     def FindUser(self, username_or_email):
         try:
