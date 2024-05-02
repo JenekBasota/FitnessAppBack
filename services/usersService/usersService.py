@@ -42,17 +42,16 @@ class UsersService():
     
     def InsertUser(self, username, email, weight, height, gender, password) -> bool:
         try:
-            with self.session.begin():
-                new_user = Users(username=username, email=email, password=password)
-                self.session.add(new_user)
-                self.session.flush()
+            new_user = Users(username=username, email=email, password=password)
+            self.session.add(new_user)
+            self.session.flush()
 
-                new_user_data = Users_data(user_id=new_user.id, weight=Decimal(f'{weight:.2f}'), height=height, gender=gender)
-                self.session.add(new_user_data)
+            new_user_data = Users_data(user_id=new_user.id, weight=Decimal(f'{weight:.2f}'), height=height, gender=gender)
+            self.session.add(new_user_data)
 
             self.session.commit()
             return new_user.id
-        except:
+        except Exception as err:
             self.session.rollback()
             return False
         
