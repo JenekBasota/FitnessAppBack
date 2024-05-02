@@ -36,6 +36,8 @@ def login():
         if user and auth_Blueprint.hasher.verify(user.password, password):
             access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(minutes=5))
             return jsonify({'msg': 'Login success', 'access_token': access_token, "status": 200})
+        else:
+            return jsonify({"msg": "Bad Credentials", "status": 401})
     except VerifyMismatchError:
         return jsonify({"msg": "Bad Credentials", "status": 401})
 
