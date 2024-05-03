@@ -7,7 +7,7 @@ class Users_data(Base):
 
     id = Column(Integer, primary_key=True, autoincrement="auto")
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    weight = Column(Numeric(precision=5, scale=2))
+    weight = Column(Integer)
     height = Column(Integer)
     gender = Column(String(1))
 

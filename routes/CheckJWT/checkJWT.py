@@ -19,7 +19,7 @@ def jwt_check():
                     "user": {
                              "username" : user.username, 
                              "email": user.email,
-                             "weight": float(user_data.weight),
+                             "weight": user_data.weight,
                              "height": user_data.height,
                              "gender": user_data.gender
                             },
