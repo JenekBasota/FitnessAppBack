@@ -18,11 +18,6 @@ if __name__ == "__main__":
     app.config["JWT_TOKEN_LOCATION"] = ['headers']
     setup_app_context()
 
-
-
-
-
-
     app.register_blueprint(auth_Blueprint, url_prefix='/api/auth')
     app.register_blueprint(jwt_Blueprint, url_prefix='/api/jwt')
     
