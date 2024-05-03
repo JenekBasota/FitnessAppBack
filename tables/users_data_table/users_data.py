@@ -10,4 +10,9 @@ class Users_data(Base):
     weight = Column(Integer)
     height = Column(Integer)
     gender = Column(String(1))
+
+
+
+
+    
     user = relationship("Users", back_populates="user_data")
