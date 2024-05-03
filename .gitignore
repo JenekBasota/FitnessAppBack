@@ -1,7 +1,7 @@
 .env
 __pycache__
 env
-DockerFile
+Dockerfile
 venv
 date
 docker-compose.yml
