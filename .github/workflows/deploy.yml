@@ -1,0 +1,22 @@
+name: remote ssh command
+on: [push]
+jobs:
+  build:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd /usr/projects/FitnessApp_Backend
+          git pull git@github.com:whatmeusername-FitnessApp/FitnessApp_Backend.git
+          docker-compose down
+          docker image prune -a -f
+          docker-clean
+          docker-compose build --no-cache
+          docker-compose up -d
