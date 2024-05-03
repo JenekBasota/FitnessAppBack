@@ -21,4 +21,5 @@ if __name__ == "__main__":
     app.register_blueprint(auth_Blueprint, url_prefix='/api/auth')
     app.register_blueprint(jwt_Blueprint, url_prefix='/api/jwt')
     
+    
     app.run(debug=True, host="0.0.0.0", port=5000)
