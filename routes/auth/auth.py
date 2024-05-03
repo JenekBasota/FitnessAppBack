@@ -28,7 +28,6 @@ def login():
     if type(username) != str or type(password) != str:
         return jsonify({"msg": "Incorrect data type detected", "status": 400})
     
-    
     user = auth_Blueprint.user_table.FindUser(username)
         
     if user == False:
