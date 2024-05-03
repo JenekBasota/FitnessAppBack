@@ -11,8 +11,4 @@ class Users_data(Base):
     height = Column(Integer)
     gender = Column(String(1))
 
-
-
-
-    
     user = relationship("Users", back_populates="user_data")
