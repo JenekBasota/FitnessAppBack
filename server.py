@@ -1,4 +1,4 @@
-from flask import Flask, current_app
+from flask import Flask, current_app, send_from_directory
 from dotenv import load_dotenv
 import os
 from sqlalchemy.orm import sessionmaker
@@ -11,6 +11,10 @@ def setup_app_context():
     with app.app_context():
         current_app.session_bd = sessionmaker(bind=dbConnectionEngine().get_engine().connect())()
 
+@app.route('/docs/swagger.json')
+def send_docs():
+    return send_from_directory(os.path.join(app.root_path, 'routes', 'swagger', 'docs'), 'swagger.json')
+
 if __name__ == "__main__":
     load_dotenv()
     app.config['SECRET_KEY'] = os.urandom(64)
@@ -20,5 +24,6 @@ if __name__ == "__main__":
 
     app.register_blueprint(auth_Blueprint, url_prefix='/api/auth')
     app.register_blueprint(jwt_Blueprint, url_prefix='/api/jwt')
+    app.register_blueprint(swaggerui_blueprint)
     
     app.run(debug=True, host="0.0.0.0", port=5000)
