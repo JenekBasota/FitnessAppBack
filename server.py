@@ -15,7 +15,6 @@ def setup_app_context():
 def send_docs():
     return send_from_directory(os.path.join(app.root_path, 'routes', 'swagger', 'docs'), 'swagger.json')
 
-
 if __name__ == "__main__":
     load_dotenv()
     app.config['SECRET_KEY'] = os.urandom(64)
