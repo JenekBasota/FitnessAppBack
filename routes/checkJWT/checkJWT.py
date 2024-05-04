@@ -24,4 +24,4 @@ def jwt_check():
                              "gender": user_data.gender
                             },
                     "status": 200
-                })
+                    })
