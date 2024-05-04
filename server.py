@@ -7,7 +7,6 @@ from routes import *
 
 app = Flask(__name__)
 
-
 def setup_app_context():
     with app.app_context():
         current_app.session_bd = sessionmaker(bind=dbConnectionEngine().get_engine().connect())()
