@@ -5,7 +5,6 @@ from sqlalchemy.orm import sessionmaker
 from utils import dbConnectionEngine
 from routes import *
 
-
 app = Flask(__name__)
 
 def setup_app_context():
