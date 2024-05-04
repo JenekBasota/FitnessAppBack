@@ -16,6 +16,7 @@ jobs:
           git pull origin main
           docker image prune -a -f
           docker-clean
+          docker builder prune --force
           docker-compose build --no-cache
           docker-compose down
           docker-compose up -d
