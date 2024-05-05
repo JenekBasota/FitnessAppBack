@@ -31,15 +31,15 @@ def login():
     user = auth_Blueprint.user_table.FindUser(username)
         
     if user == False:
-        return jsonify({"msg": "Database Error", "status": 400})
+        return jsonify({"msg": "Непредвиденная ошибка, попробуйте еще раз", "status": 400})
     try:    
         if user and auth_Blueprint.hasher.verify(user.password, password):
             access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(minutes=5))
             return jsonify({'msg': 'Login success', 'access_token': access_token, "status": 200})
         else:
-            return jsonify({"msg": "Bad Credentials", "status": 401})
+            return jsonify({"msg": "Неверный логин или пароль", "status": 401})
     except VerifyMismatchError:
-        return jsonify({"msg": "Bad Credentials", "status": 401})
+        return jsonify({"msg": "Неверный логин или пароль", "status": 401})
 
 @auth_Blueprint.route("/register", methods=["POST"])
 def register():
@@ -61,16 +61,19 @@ def register():
 
     user = auth_Blueprint.user_table.CheckUniqueEmailOrLogin(username=username, email=email)
     if user == False:
-        return jsonify({"msg": "Database Error", "status": 400})
+        return jsonify({"msg": "Непредвиденная ошибка, попробуйте еще раз", "status": 400})
     if user is not None:
-        return jsonify({"msg": "This user already exists", "status": 401})
+        if user.username == username:
+            return jsonify({"msg": "Данный логин уже используется", "status": 401})
+        if user.email ==  email:
+            return jsonify({"msg": "Данный email уже используется", "status": 401})
     
     user_id = auth_Blueprint.user_table.InsertUser(
         username, email, weight,
         height, gender,
         auth_Blueprint.user_table.EncryptedPassword(password))
     if not user_id:
-        return jsonify({"msg": "Database Error", "status": 400})
+        return jsonify({"msg": "Непредвиденная ошибка, попробуйте еще раз", "status": 400})
     
     access_token = create_access_token(identity=user_id, expires_delta=datetime.timedelta(hours=2))
     return jsonify({'msg': 'User created', 'access_token': access_token, "status": 200})
