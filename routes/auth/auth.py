@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import JWTManager, create_access_token
+from flask_jwt_extended import create_access_token
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 import datetime
@@ -11,7 +11,6 @@ auth_Blueprint = Blueprint('auth_Blueprint', __name__)
 def init_auth_blueprint(state):
     app = state.app
 
-    auth_Blueprint.jwt = JWTManager(app)
     auth_Blueprint.hasher = PasswordHasher()
     auth_Blueprint.user_table = UsersService(app.session_bd, auth_Blueprint.hasher)
 
