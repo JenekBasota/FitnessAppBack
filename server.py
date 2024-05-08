@@ -32,4 +32,4 @@ if __name__ == "__main__":
     jwt.init_app(app)
     socketio.init_app(app)
     
-    socketio.run(app, port=5000, allow_unsafe_werkzeug=True)
+    socketio.run(app, debug=True, host="0.0.0.0", port=5000, allow_unsafe_werkzeug=True)
