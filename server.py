@@ -5,6 +5,7 @@ import os
 from sqlalchemy.orm import sessionmaker
 from utils import dbConnectionEngine
 from routes import *
+from socketIO.socket import socketio
 
 app = Flask(__name__)
 jwt = JWTManager()
@@ -29,5 +30,6 @@ if __name__ == "__main__":
     app.register_blueprint(swaggerui_blueprint)
     
     jwt.init_app(app)
+    socketio.init_app(app)
     
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    socketio.run(app, debug=True, host="0.0.0.0", port=5000)

@@ -34,7 +34,12 @@ def login():
     try:    
         if user and auth_Blueprint.hasher.verify(user.password, password):
             access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(minutes=5))
-            return jsonify({'msg': 'Login success', 'access_token': access_token, "status": 200})
+            return jsonify({'msg': 'Login success', 'access_token': access_token, "status": 200, 
+                            "data": {"username": user.username,
+                                     "email": user.email,
+                                     "weight": user.weight,
+                                     "height": user.height,
+                                     "gender": user.gender}})
         else:
             return jsonify({"msg": "AUTH_INCORRECT_LOGIN_OR_PASSWORD", "status": 401})
     except VerifyMismatchError:
@@ -75,4 +80,9 @@ def register():
         return jsonify({"msg": "WTF_U_ENTER", "status": 400})
     
     access_token = create_access_token(identity=user_id, expires_delta=datetime.timedelta(hours=2))
-    return jsonify({'msg': 'User created', 'access_token': access_token, "status": 200})
+    return jsonify({'msg': 'User created', 'access_token': access_token, "status": 200,
+                    "data": {"username": username,
+                    "email": email,
+                    "weight": weight,
+                    "height": height,
+                    "gender": gender}})

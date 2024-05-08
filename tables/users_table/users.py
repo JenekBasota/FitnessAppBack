@@ -9,5 +9,6 @@ class Users(Base):
     username = Column(String(16), unique=True)
     email = Column(String(100), unique=True)
     password = Column(String(128))
-
-    user_data = relationship("Users_data", back_populates="user")
+    weight = Column(Integer)
+    height = Column(Integer)
+    gender = Column(String(1))

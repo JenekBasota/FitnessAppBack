@@ -13,8 +13,7 @@ class UsersService():
     def FindUserById(self, user_id):
         try:
             return (
-                self.session.query(Users, Users_data)
-                .join(Users_data, Users.id == Users_data.user_id)
+                self.session.query(Users)
                 .filter(Users.id == user_id)
                 .first()
             )
@@ -42,13 +41,8 @@ class UsersService():
     
     def InsertUser(self, username, email, weight, height, gender, password) -> bool:
         try:
-            new_user = Users(username=username, email=email, password=password)
+            new_user = Users(username=username, email=email, password=password, weight=weight, height=height, gender=gender)
             self.session.add(new_user)
-            self.session.flush()
-
-            new_user_data = Users_data(user_id=new_user.id, weight=weight, height=height, gender=gender)
-            self.session.add(new_user_data)
-
             self.session.commit()
             return new_user.id
         except:

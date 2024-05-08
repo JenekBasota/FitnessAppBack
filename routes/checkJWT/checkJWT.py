@@ -14,14 +14,13 @@ def init_jwt_blueprint(state):
 @jwt_required()
 def jwt_check():
     current_user_id = get_jwt_identity()
-    user, user_data = jwt_Blueprint.user_table.FindUserById(current_user_id)
+    user = jwt_Blueprint.user_table.FindUserById(current_user_id)
     return jsonify({"msg": 'success', 
-                    "user": {
-                             "username" : user.username, 
-                             "email": user.email,
-                             "weight": user_data.weight,
-                             "height": user_data.height,
-                             "gender": user_data.gender
-                            },
-                    "status": 200
-                    })
+                    "status": 200,
+                    "data": {
+                        "username" : user.username, 
+                        "email": user.email,
+                        "weight": user.weight,
+                        "height": user.height,
+                        "gender": user.gender
+                    }})
