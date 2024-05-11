@@ -69,6 +69,12 @@ class FullBodyPoseEmbedder(object):
         embedding = self._get_pose_distance_embedding(landmarks)
 
         return embedding
+    
+    def get_landmark_from_json(self, data):
+        landmark_array = np.array(data["landmark"], dtype=np.float32)
+
+        reshaped_data = np.reshape(landmark_array, (-1, 3))
+        return reshaped_data
 
     def _normalize_pose_landmarks(self, landmarks):
         """Normalizes landmarks translation and scale."""

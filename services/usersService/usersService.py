@@ -41,7 +41,7 @@ class UsersService():
     
     def InsertUser(self, username, email, weight, height, gender, password) -> bool:
         try:
-            new_user = Users(username=username, email=email, password=password, weight=weight, height=height, gender=gender)
+            new_user = Users(username=username, email=email, password=password, weight=weight, height=height, gender=gender, balance=150, lives=10)
             self.session.add(new_user)
             self.session.commit()
             return new_user.id

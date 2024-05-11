@@ -39,14 +39,41 @@ def login():
                                      "email": user.email,
                                      "weight": user.weight,
                                      "height": user.height,
-                                     "gender": user.gender}})
+                                     "gender": user.gender,
+                                     "balance": user.balance,
+                                     "lives": user.lives}})
         else:
             return jsonify({"msg": "AUTH_INCORRECT_LOGIN_OR_PASSWORD", "status": 401})
     except VerifyMismatchError:
         return jsonify({"msg": "AUTH_INCORRECT_LOGIN_OR_PASSWORD", "status": 401})
+    
+@auth_Blueprint.route("/unique_check", methods=["POST"])
+def register_step_first():
+    if not request.is_json:
+        return jsonify({"msg": "Missing JSON in request", "status": 400})
+    
+    username = request.json.get("username")
+    email = request.json.get("email")
+
+    if not username or not email:
+        return jsonify({"msg": "Missing data", "status": 400})
+    
+    if type(username) != str or type(email) != str:
+        return jsonify({"msg": "Incorrect data type detected", "status": 400})
+    
+    user = auth_Blueprint.user_table.CheckUniqueEmailOrLogin(username=username, email=email)
+    if user == False:
+        return jsonify({"msg": "WTF_U_ENTER", "status": 400})
+    if user is not None:
+        if user.username == username:
+            return jsonify({"msg": "AUTH_REGISTER_EXISTING_LOGIN", "status": 401})
+        if user.email ==  email:
+            return jsonify({"msg": "AUTH_REGISTER_EXISTING_EMAIL", "status": 401})
+        
+    return jsonify({"msg": "AUTH_UNIQUE_SUCCESSFUL", "status": 200})
 
 @auth_Blueprint.route("/register", methods=["POST"])
-def register():
+def register_step_two():
     if not request.is_json:
         return jsonify({"msg": "Missing JSON in request", "status": 400})
 
@@ -62,15 +89,6 @@ def register():
     
     if type(username) != str or type(email) != str or type(gender) != str or type(password) != str or type(height) != int or type(weight) != int:
         return jsonify({"msg": "Incorrect data type detected", "status": 400})
-
-    user = auth_Blueprint.user_table.CheckUniqueEmailOrLogin(username=username, email=email)
-    if user == False:
-        return jsonify({"msg": "WTF_U_ENTER", "status": 400})
-    if user is not None:
-        if user.username == username:
-            return jsonify({"msg": "AUTH_REGISTER_EXISTING_LOGIN", "status": 401})
-        if user.email ==  email:
-            return jsonify({"msg": "AUTH_REGISTER_EXISTING_EMAIL", "status": 401})
     
     user_id = auth_Blueprint.user_table.InsertUser(
         username, email, weight,
@@ -85,4 +103,10 @@ def register():
                     "email": email,
                     "weight": weight,
                     "height": height,
-                    "gender": gender}})
+                    "gender": gender,
+                    "balance": 150,
+                    "lives": 10}})
+    
+
+
+

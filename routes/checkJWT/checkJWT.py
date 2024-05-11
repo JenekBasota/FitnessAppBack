@@ -22,5 +22,7 @@ def jwt_check():
                         "email": user.email,
                         "weight": user.weight,
                         "height": user.height,
-                        "gender": user.gender
+                        "gender": user.gender,
+                        "balance": user.balance,
+                        "lives": user.lives
                     }})

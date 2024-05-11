@@ -1,5 +1,4 @@
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship
 from utils.dbBase import Base
 
 class Users(Base):
@@ -12,3 +11,5 @@ class Users(Base):
     weight = Column(Integer)
     height = Column(Integer)
     gender = Column(String(1))
+    balance = Column(Integer)
+    lives = Column(Integer)
