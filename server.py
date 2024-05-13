@@ -9,7 +9,7 @@ from routes import *
 from socketIO.socket import socketio
 
 app = Flask(__name__)
-cors = CORS(resources={r"/*": {"origins": "*"}})
+cors = CORS()
 jwt = JWTManager()
 
 def setup_app_context():
@@ -33,6 +33,6 @@ if __name__ == "__main__":
     
     jwt.init_app(app)
     socketio.init_app(app)
-    cors.init_app(app)
+    cors.init_app(app, resources={r"/*": {"origins": "*"}})
     
     socketio.run(app, debug=False, host="0.0.0.0", port=5000, allow_unsafe_werkzeug=True)
