@@ -1,4 +1,5 @@
 from flask import Flask, current_app, send_from_directory
+from flask_cors import CORS
 from dotenv import load_dotenv
 from flask_jwt_extended import JWTManager
 import os
@@ -8,6 +9,7 @@ from routes import *
 from socketIO.socket import socketio
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
 jwt = JWTManager()
 
 def setup_app_context():
