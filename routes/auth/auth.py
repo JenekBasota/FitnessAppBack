@@ -33,7 +33,7 @@ def login():
         return jsonify({"msg": "WTF_U_ENTER", "status": 400})
     try:    
         if user and auth_Blueprint.hasher.verify(user.password, password):
-            access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(minutes=5))
+            access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(days=31))
             return jsonify({'msg': 'Login success', 'access_token': access_token, "status": 200, 
                             "data": {"username": user.username,
                                      "email": user.email,
@@ -97,7 +97,7 @@ def register_step_two():
     if not user_id:
         return jsonify({"msg": "WTF_U_ENTER", "status": 400})
     
-    access_token = create_access_token(identity=user_id, expires_delta=datetime.timedelta(hours=2))
+    access_token = create_access_token(identity=user_id, expires_delta=datetime.timedelta(days=31))
     return jsonify({'msg': 'User created', 'access_token': access_token, "status": 200,
                     "data": {"username": username,
                     "email": email,
