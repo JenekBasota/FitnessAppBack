@@ -84,10 +84,10 @@ def register_step_two():
     gender = request.json.get("gender")
     password = request.json.get("password")
 
-    if not username or not password or not email or not weight or not height or not gender:
+    if not username or not password or not email:
         return jsonify({"msg": "Missing data", "status": 400})
     
-    if type(username) != str or type(email) != str or type(gender) != str or type(password) != str or type(height) != int or type(weight) != int:
+    if type(username) != str or type(email) != str or (type(gender) != str and gender is not None) or type(password) != str or (type(height) != int and height is not None) or (type(weight) != int and weight is not None):
         return jsonify({"msg": "Incorrect data type detected", "status": 400})
     
     user_id = auth_Blueprint.user_table.InsertUser(
