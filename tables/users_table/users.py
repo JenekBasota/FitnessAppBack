@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from utils.dbBase import Base
 
+
 class Users(Base):
     __tablename__ = "users"
 
@@ -13,3 +14,4 @@ class Users(Base):
     gender = Column(String(1))
     balance = Column(Integer)
     lives = Column(Integer)
+    programs = Column(Integer)
