@@ -35,4 +35,4 @@ if __name__ == "__main__":
     socketio.init_app(app)
     cors.init_app(app, resources={r"/*": {"origins": "*"}})
     
-    socketio.run(app, debug=False, host="0.0.0.0", port=5000, allow_unsafe_werkzeug=True)
+    socketio.run(app, debug=False, host="0.0.0.0", port=443, allow_unsafe_werkzeug=True)
