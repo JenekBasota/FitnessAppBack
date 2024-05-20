@@ -102,7 +102,7 @@ def register_step_two():
     password = request.json.get("password")
     programs = request.json.get("programs")
 
-    if not username or not password or not email or not programs:
+    if not username or not password or not email or programs is None:
         return jsonify({"msg": "Missing data", "status": 400})
 
     if (
