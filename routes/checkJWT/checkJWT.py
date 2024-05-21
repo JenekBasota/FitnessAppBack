@@ -4,7 +4,6 @@ from services import *
 
 jwt_Blueprint = Blueprint("jwt_Blueprint", __name__)
 
-
 @jwt_Blueprint.record
 def init_jwt_blueprint(state):
     app = state.app
