@@ -12,7 +12,6 @@ app = Flask(__name__)
 cors = CORS()
 jwt = JWTManager()
 
-
 def setup_app_context():
     with app.app_context():
         current_app.session_bd = sessionmaker(
