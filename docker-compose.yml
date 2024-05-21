@@ -37,7 +37,7 @@ services:
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_DB: ${fitnessapp}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - ./date/postgres-data:/var/lib/postgresql/data
     ports:
