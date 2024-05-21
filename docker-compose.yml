@@ -1,0 +1,57 @@
+version: '3.9'
+
+services:
+   traefik:
+    container_name: traefik_container
+    image: traefik:v2.9
+    command:
+      - --api.insecure=true
+      - --providers.docker=true
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.websecure.http.tls=true
+    ports:
+      - "8080:8080"
+      - "443:443" 
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+   flask_web:
+    container_name: flask_web_container
+    build: .
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=flask_web"
+      - "traefik.http.routers.flask_web.rule=Host(`apifitneso.ru`)"
+      - "traefik.http.routers.flask_web.entrypoints=websecure"
+      - "traefik.http.services.flask_web.loadbalancer.server.port=5000"
+      - "traefik.http.services.flask_web.loadbalancer.server.scheme=http"
+    ports:
+      - 5000:5000
+    depends_on:
+      - traefik
+    restart: unless-stopped
+
+   postgres:
+    container_name: postgres_flask_container
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "l1nix"
+      POSTGRES_USER: "l1nix"
+      POSTGRES_DB: "fitnessapp"
+    volumes:
+      - ./date/postgres-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+
+   pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'dennis.tihomirov@gmail.com'
+      PGADMIN_DEFAULT_PASSWORD: '123qweasdfgh'
+    volumes:
+      - ./date/pgadmin:/var/lib/pgadmin
+    ports:
+      - 5050:80
+    restart: unless-stopped
