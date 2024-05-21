@@ -29,7 +29,6 @@ def send_docs():
 
 if __name__ == "__main__":
     load_dotenv()
-    
     app.config["SECRET_KEY"] = os.urandom(64)
     app.config["JWT_SECRET_KEY"] = os.urandom(64)
     app.config["JWT_TOKEN_LOCATION"] = ["headers"]
