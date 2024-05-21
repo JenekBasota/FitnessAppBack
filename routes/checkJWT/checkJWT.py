@@ -11,7 +11,6 @@ def init_jwt_blueprint(state):
 
     jwt_Blueprint.user_table = UsersService(app.session_bd)
 
-
 @jwt_Blueprint.route("/check", methods=["GET"])
 @jwt_required()
 def jwt_check():
