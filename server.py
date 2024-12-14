@@ -1,12 +1,12 @@
 from flask import Flask, current_app, send_from_directory
-from flask_cors import CORS
 from dotenv import load_dotenv
+
+from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 import os
 from sqlalchemy.orm import sessionmaker
 from utils import dbConnectionEngine
 from routes import *
-from socketIO.socket import socketio
 
 app = Flask(__name__)
 cors = CORS()
@@ -17,6 +17,10 @@ def setup_app_context():
         current_app.session_bd = sessionmaker(
             bind=dbConnectionEngine().get_engine().connect()
         )()
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
 
 
 @app.route("/docs/swagger.json")
@@ -36,11 +40,10 @@ if __name__ == "__main__":
     app.register_blueprint(auth_Blueprint, url_prefix="/api/auth")
     app.register_blueprint(jwt_Blueprint, url_prefix="/api/jwt")
     app.register_blueprint(swaggerui_blueprint)
-
+    
     jwt.init_app(app)
-    socketio.init_app(app)
-    cors.init_app(app, resources={r"/*": {"origins": "*"}})
 
-    socketio.run(
-        app, debug=False, host="0.0.0.0", port=5000, allow_unsafe_werkzeug=True
-    )
+    cors.init_app(app, resources={r"/*": {"origins": "*"}})
+    app.run(debug=True)
+    print("Server is starting...")
+   
